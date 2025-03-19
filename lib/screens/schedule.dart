@@ -78,10 +78,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
               child: TextField(
                 controller: timePicker,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.access_time,
-                    color: Color(0xFF086C74),
-                  ),
+                  prefixIcon: Icon(Icons.access_time, color: Color(0xFF086C74)),
                   filled: true,
                   fillColor: const Color.fromARGB(255, 255, 255, 255),
                   contentPadding: EdgeInsets.all(18),
@@ -95,10 +92,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide(
-                      color: Color(0xFF086C74),
-                      width: 2,
-                    ),
+                    borderSide: BorderSide(color: Color(0xFF086C74), width: 2),
                   ),
                 ),
                 onTap: () async {
@@ -106,7 +100,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                     context: context,
                     initialTime: TimeOfDay.now(),
                   );
-      
+
                   if (time != null) {
                     setState(() {
                       timePicker.text = time.format(context);
@@ -129,6 +123,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
             ),
             SizedBox(height: 15),
             Container(
+              margin: EdgeInsets.only(left: 25, right: 25),
               width: double.infinity,
               decoration: BoxDecoration(),
               height: 150,
@@ -245,9 +240,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                           SizedBox(
                             height: 70,
                             width: 90,
-                            child: Image.asset(
-                              "assets/images/electricity.png",
-                            ),
+                            child: Image.asset("assets/images/electricity.png"),
                           ),
                           SizedBox(height: 10),
                           const Text(
@@ -265,6 +258,46 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                 ],
               ),
             ),
+            SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.only(left: 25),
+              child: Text(
+                "Quantity Estimation",
+                style: TextStyle(
+                  color: Color(0xFF086C74),
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            SizedBox(height: 15,),
+            Container(
+              margin: EdgeInsets.only(left: 25, right: 25),
+              child: TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.analytics_outlined, color: Color(0xFF086C74)),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 255, 255, 255),
+                  contentPadding: EdgeInsets.all(18),
+                  hintText: "Kg",
+                  hintStyle: TextStyle(
+                    color: const Color(0xFF5BB59B),
+                    fontSize: 20,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide(color: Color(0xFF086C74), width: 2),
+                  ),
+                ),
+                onTap: ()  {
+                
+                },
+              ),
+            ),
             SizedBox(height: 25),
             Container(
               margin: EdgeInsets.only(left: 20, right: 20),
@@ -274,9 +307,16 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                   backgroundColor: Color(0xFF5BB59B),
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  minimumSize: Size(465, 65)
+                  minimumSize: Size(465, 65),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15,
+                    ),
+                  ),
                 ),
-                child: Text("schedule Pickup"),
+                child: Text("Schedule Pickup",
+                style: TextStyle(
+                  fontSize: 18
+                ),),
               ),
             ),
           ],
@@ -300,7 +340,6 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
           margin: EdgeInsets.only(left: 10),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 255, 255, 255),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(
@@ -316,7 +355,6 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
             margin: EdgeInsets.only(right: 20),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 255, 255),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
