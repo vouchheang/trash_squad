@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:trash_squad/screens/history.dart';
 
 class ScheduleWidget extends StatefulWidget {
   const ScheduleWidget({super.key});
@@ -19,7 +20,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: _appBar(),
+      appBar: _appBar(context),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -325,7 +326,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
     );
   }
 
-  AppBar _appBar() {
+  AppBar _appBar(BuildContext context) {
     return AppBar(
       title: const Text("Schedule Pickup"),
       titleTextStyle: TextStyle(
@@ -342,9 +343,19 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(
-            Icons.arrow_back_ios_new_outlined,
-            color: Color(0xFF086C74),
+          child: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios_new_outlined,
+              color: Color(0xFF086C74),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HistoryWidget(),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -357,10 +368,20 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
+            child: IconButton(
+            icon: Icon(
               Icons.notifications_active_outlined,
               color: Color(0xFF086C74),
             ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HistoryWidget(),
+                ),
+              );
+            },
+          ),
           ),
         ),
       ],

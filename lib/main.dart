@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:trash_squad/screens/flash.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trash_squad/bloc/user_bloc.dart';
 import 'package:trash_squad/screens/login.dart';
-import 'package:trash_squad/screens/schedule.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -13,9 +14,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ScheduleWidget(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<UserBloc>(
+          create: (context) => UserBloc(),
+        ),
+        // Add other BLoCs here
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const LoginWidget(),
+      ),
     );
   }
 }
