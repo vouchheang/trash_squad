@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trash_squad/bloc/user_bloc.dart';
+import 'package:trash_squad/screens/login.dart';
+
 import 'package:trash_squad/screens/register.dart';
 
 void main() {
@@ -10,10 +14,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      home: const Register(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<UserBloc>(
+          create: (context) => UserBloc(),
+        ),
+        // Add other BLoCs here
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const LoginWidget(),
+      ),
     );
   }
 }
+
