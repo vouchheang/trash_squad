@@ -27,6 +27,7 @@ class HistoryWidget extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
+
             SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.only(left: 25),
@@ -39,6 +40,7 @@ class HistoryWidget extends StatelessWidget {
                 ),
               ),
             ),
+
             SizedBox(height: 15),
             Container(
               margin: EdgeInsets.only(left: 25, right: 25),
@@ -108,8 +110,10 @@ class HistoryWidget extends StatelessWidget {
                     width: 120,
                     height: 45,
                     decoration: BoxDecoration(),
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
                       onPressed: () {},
+                      icon: Icon(Icons.restore_from_trash_outlined, color: Colors.white,),
+                      label: Text("Cancel", style: TextStyle(fontSize: 18)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 255, 0, 0),
                         foregroundColor: Colors.white,
@@ -121,12 +125,12 @@ class HistoryWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
-                      child: Text("Cancel", style: TextStyle(fontSize: 18)),
                     ),
                   ),
                 ],
               ),
             ),
+
             SizedBox(height: 15),
             Container(
               margin: EdgeInsets.only(left: 25, right: 25),
@@ -196,8 +200,10 @@ class HistoryWidget extends StatelessWidget {
                     width: 120,
                     height: 45,
                     decoration: BoxDecoration(),
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
                       onPressed: () {},
+                      icon: Icon(Icons.restore_from_trash_outlined, color: Colors.white,),
+                      label: Text("Cancel", style: TextStyle(fontSize: 18)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color.fromARGB(255, 255, 0, 0),
                         foregroundColor: Colors.white,
@@ -209,12 +215,12 @@ class HistoryWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
-                      child: Text("Cancel", style: TextStyle(fontSize: 18)),
                     ),
                   ),
                 ],
               ),
             ),
+
             SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.only(left: 25),
@@ -296,8 +302,10 @@ class HistoryWidget extends StatelessWidget {
                     width: 120,
                     height: 45,
                     decoration: BoxDecoration(),
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
                       onPressed: () {},
+                      icon: Icon(Icons.download_done_rounded, color: Colors.white),
+                      label: Text("Done", style: TextStyle(fontSize: 18)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF5BB59B),
                         foregroundColor: Colors.white,
@@ -309,12 +317,12 @@ class HistoryWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
-                      child: Text("Done", style: TextStyle(fontSize: 18)),
                     ),
                   ),
                 ],
               ),
             ),
+            
             SizedBox(height: 15),
             Container(
               margin: EdgeInsets.only(left: 25, right: 25),
@@ -384,8 +392,10 @@ class HistoryWidget extends StatelessWidget {
                     width: 120,
                     height: 45,
                     decoration: BoxDecoration(),
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
                       onPressed: () {},
+                      icon: Icon(Icons.download_done_rounded, color: Colors.white),
+                      label: Text("Done", style: TextStyle(fontSize: 18)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF5BB59B),
                         foregroundColor: Colors.white,
@@ -397,7 +407,6 @@ class HistoryWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
-                      child: Text("Done", style: TextStyle(fontSize: 18)),
                     ),
                   ),
                 ],
