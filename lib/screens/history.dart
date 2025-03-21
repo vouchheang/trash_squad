@@ -8,6 +8,7 @@ class HistoryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +108,7 @@ class HistoryWidget extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(right: 20),
-                    width: 120,
+                    width: 125,
                     height: 45,
                     decoration: BoxDecoration(),
                     child: ElevatedButton.icon(
@@ -197,7 +198,7 @@ class HistoryWidget extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(right: 20),
-                    width: 120,
+                    width: 125,
                     height: 45,
                     decoration: BoxDecoration(),
                     child: ElevatedButton.icon(
@@ -299,7 +300,7 @@ class HistoryWidget extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(right: 20),
-                    width: 120,
+                    width: 125,
                     height: 45,
                     decoration: BoxDecoration(),
                     child: ElevatedButton.icon(
@@ -389,7 +390,7 @@ class HistoryWidget extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(right: 20),
-                    width: 120,
+                    width: 125,
                     height: 45,
                     decoration: BoxDecoration(),
                     child: ElevatedButton.icon(
