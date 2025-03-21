@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trash_squad/bloc/user_bloc.dart';
+import 'package:trash_squad/screens/history.dart';
 import 'package:trash_squad/screens/login.dart';
 import 'package:trash_squad/screens/social.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home:  SocialWidget(),
+        home:  HistoryWidget(),
       ),
     );
   }

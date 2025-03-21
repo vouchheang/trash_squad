@@ -281,8 +281,8 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                   filled: true,
                   fillColor: const Color.fromARGB(255, 255, 255, 255),
                   contentPadding: EdgeInsets.all(18),
-                  hintText: "Kg",
-                  hintStyle: TextStyle(
+                  labelText: "Kg",
+                  labelStyle: TextStyle(
                     color: const Color(0xFF5BB59B),
                     fontSize: 20,
                   ),
