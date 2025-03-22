@@ -299,7 +299,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                 },
               ),
             ),
-            SizedBox(height: 25),
+            SizedBox(height: 30),
             Container(
               margin: EdgeInsets.only(left: 20, right: 20),
               child: ElevatedButton(
@@ -363,14 +363,14 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
         GestureDetector(
           onTap: () {},
           child: Container(
-            margin: EdgeInsets.only(right: 20),
+            margin: EdgeInsets.only(right: 10),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
             ),
             child: IconButton(
             icon: Icon(
-              Icons.notifications_active_outlined,
+              Icons.notifications_outlined,
               color: Color(0xFF086C74),
             ),
             onPressed: () {

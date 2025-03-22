@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:trash_squad/models/activity_model.dart';
+import 'package:trash_squad/models/history_model.dart';
 import 'package:trash_squad/models/user_model.dart';
 import 'package:trash_squad/services/storage_service.dart';
 
@@ -47,6 +48,24 @@ class ApiService {
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       return data.map((json) => Activity.fromJson(json)).toList();
+    }
+    return [];
+  }
+
+  Future<List<History>> fetchHistories({int limit = 20}) async {
+    final token = await _storageService.getToken(); // Retrieve token
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/pickup/history?limit=$limit'),
+      headers: {'Authorization': 'Bearer $token'}, // Use token
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => History.fromJson(json)).toList();
     }
     return [];
   }
