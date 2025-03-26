@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:trash_squad/model/activity.dart';
-import 'package:trash_squad/model/option.dart';
+import 'package:trash_squad/models/activity_reward.dart';
+import 'package:trash_squad/models/option.dart';
 
 class RewardsScreen extends StatelessWidget {
   const RewardsScreen({super.key});
@@ -34,13 +34,13 @@ class RewardsScreen extends StatelessWidget {
       ),
     ];
 
-    final List<Activity> activities = [
-      Activity(title: 'Cash Voucher', points: 500, code: 'DEF789'),
-      Activity(title: 'Cash Voucher', points: 300, code: 'GHI012'),
-      Activity(title: 'Cash Voucher', points: 500, code: 'DEF789'),
-      Activity(title: 'Shopping Discount', points: 700, code: 'VHU198'),
-      Activity(title: 'Cash Voucher', points: 100, code: 'DEF789'),
-      Activity(title: 'Shopping Discount', points: 300, code: 'VTU023'),
+    final List<ActivityReward> activities = [
+      ActivityReward(title: 'Cash Voucher', points: 500, code: 'DEF789'),
+      ActivityReward(title: 'Cash Voucher', points: 300, code: 'GHI012'),
+      ActivityReward(title: 'Cash Voucher', points: 500, code: 'DEF789'),
+      ActivityReward(title: 'Shopping Discount', points: 700, code: 'VHU198'),
+      ActivityReward(title: 'Cash Voucher', points: 100, code: 'DEF789'),
+      ActivityReward(title: 'Shopping Discount', points: 300, code: 'VTU023'),
     ];
 
     return Scaffold(
@@ -50,7 +50,7 @@ class RewardsScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF086C74)),
-          onPressed: () {},
+          onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text('Reward', style: TextStyle(color: Colors.black87)),
       ),
@@ -125,7 +125,7 @@ class RewardsScreen extends StatelessWidget {
               ),
 
               // Recent Activity Section
-                          SizedBox(height: 20,),
+              SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -216,7 +216,7 @@ class RewardCard extends StatelessWidget {
 }
 
 class ActivityCard extends StatelessWidget {
-  final Activity activity;
+  final ActivityReward activity;
 
   const ActivityCard({super.key, required this.activity});
 

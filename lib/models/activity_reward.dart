@@ -1,9 +1,9 @@
-class Activity {
+class ActivityReward {
   final String title;
   final int points;
   final String code;
 
-  Activity({
+  ActivityReward({
     required this.title,
     required this.points,
     required this.code,

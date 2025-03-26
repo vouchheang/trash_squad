@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:trash_squad/screens/profile.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trash_squad/bloc/activity_bloc.dart';
+import 'package:trash_squad/bloc/user_bloc.dart';
+import 'package:trash_squad/screens/history.dart';
+import 'package:trash_squad/screens/home.dart';
+import 'package:trash_squad/screens/login.dart';
+import 'package:trash_squad/screens/main_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,10 +16,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      home: Profile(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<UserBloc>(create: (context) => UserBloc()),
+        BlocProvider<ActivityBloc>(create: (context) => ActivityBloc()),
+
+        // Add other BLoCs here
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: LoginWidget(),
+      ),
     );
   }
 }

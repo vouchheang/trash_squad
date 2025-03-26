@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trash_squad/controllers/profile_controller.dart';
+import 'package:trash_squad/models/user_model.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -8,27 +10,36 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  bool _isEditing = false;
-
-  // User data
-  String firstName = 'Saddie';
-  String lastName = 'Shine';
-  String email = 'Saddie@gmail.com';
-  String phoneNumber = '1234567987';
-
-  // Controllers for text fields
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
+  late TextEditingController _addressController;
+
+  final ProfileController _profileController = ProfileController();
+  late Future<List<User>> _profile;
 
   @override
   void initState() {
     super.initState();
-    _firstNameController = TextEditingController(text: firstName);
-    _lastNameController = TextEditingController(text: lastName);
-    _emailController = TextEditingController(text: email);
-    _phoneController = TextEditingController(text: phoneNumber);
+
+    _firstNameController = TextEditingController();
+    _lastNameController = TextEditingController();
+    _emailController = TextEditingController();
+    _phoneController = TextEditingController();
+    _addressController = TextEditingController();
+
+    _profile = _profileController.fetchProfile().then((users) {
+      if (users.isNotEmpty) {
+        User user = users.first;
+        _firstNameController.text = user.userName;
+        _lastNameController.text = user.userName;
+        _emailController.text = user.email;
+        _phoneController.text = '012345678';
+        _addressController.text = 'Phnom Penh, Cambodia';
+      }
+      return users;
+    });
   }
 
   @override
@@ -37,246 +48,131 @@ class _ProfileState extends State<Profile> {
     _lastNameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
+    _addressController.dispose();
     super.dispose();
-  }
-
-  void _startEditing() {
-    setState(() {
-      _isEditing = true;
-      _firstNameController.text = firstName;
-      _lastNameController.text = lastName;
-      _emailController.text = email;
-      _phoneController.text = phoneNumber;
-    });
-  }
-
-  void _saveChanges() {
-    setState(() {
-      // Save the changes
-      firstName = _firstNameController.text;
-      lastName = _lastNameController.text;
-      email = _emailController.text;
-      phoneNumber = _phoneController.text;
-      _isEditing = false;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile updated successfully')),
-      );
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 25),
-              Column(
-                children: [
-                  const SizedBox(height: 20),
-                  Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color(0xFF086C74),
-                            width: 3,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: const CircleAvatar(
-                          radius: 60,
-                          backgroundImage: AssetImage(
-                            'assets/images/profile.png',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    '$firstName $lastName',
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF086C74),
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
+      body: FutureBuilder<List<User>>(
+        future: _profile,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.location_on_outlined),
-                      Text(
-                        'Phnom Penh, Cambodia',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                    ],
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No profile data available'));
+          }
+
+          // Get the profile data
+          User user = snapshot.data!.first;
+
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildProfileHeader(user),
+                const SizedBox(height: 24),
+                _buildProfileDetailsCard(user),
+                const SizedBox(height: 24),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildProfileHeader(User user) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      decoration: BoxDecoration(
+        color: const Color(0xFF086C74),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
+      ),
+      child: Center(
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 4),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    spreadRadius: 2,
+                    blurRadius: 10,
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF086C74).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      spreadRadius: 1,
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildProfileField(
-                      'First name',
-                      firstName,
-                      Icons.person,
-                      _firstNameController,
-                    ),
-                    const Divider(height: 32),
-                    _buildProfileField(
-                      'Last name',
-                      lastName,
-                      Icons.person_outline,
-                      _lastNameController,
-                    ),
-                    const Divider(height: 32),
-                    _buildProfileField(
-                      'Email',
-                      email,
-                      Icons.email,
-                      _emailController,
-                    ),
-                    const Divider(height: 32),
-                    _buildProfileField(
-                      'Phone Number',
-                      phoneNumber,
-                      Icons.phone,
-                      _phoneController,
-                    ),
-                  ],
-                ),
+              child: const CircleAvatar(
+                radius: 60,
+                backgroundImage: AssetImage('assets/images/profile.png'),
               ),
-              const SizedBox(height: 24),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF086C74).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      spreadRadius: 1,
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _isEditing
-                        ? Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                              onPressed:
-                                  () => setState(() {
-                                    _isEditing = false;
-                                  }),
-                              child: const Text(
-                                'Cancel',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: _saveChanges,
-                              child: const Text(
-                                'Save',
-                                style: TextStyle(
-                                  color: Color(0xFF086C74),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                        : GestureDetector(
-                          onTap: _startEditing,
-                          child: Row(
-                            children: [
-                              const Icon(Icons.edit, color: Color(0xFF086C74)),
-                              const SizedBox(width: 12),
-                              const Text(
-                                'Edit Profile',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                              const Spacer(),
-                              const Icon(
-                                Icons.arrow_forward_ios,
-                                size: 16,
-                                color: Colors.black54,
-                              ),
-                            ],
-                          ),
-                        ),
-                  ],
-                ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              user.userName,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF086C74),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                child: const Text(
-                  'LOGOUT',
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.location_on, color: Colors.white),
+                Text(
+                  'Phnom Penh, Cambodia',
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1,
+                    color: Colors.white.withValues(alpha: 0.8),
                   ),
                 ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileDetailsCard(User user) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Card(
+        elevation: 6,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildProfileField(
+                'Full Name',
+                Icons.person,
+                _firstNameController,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 16),
+              _buildProfileField('Email', Icons.email, _emailController),
+              const SizedBox(height: 16),
+              _buildProfileField('Phone Number', Icons.phone, _phoneController),
+              const SizedBox(height: 16),
+              _buildProfileField(
+                'Address',
+                Icons.location_on,
+                _addressController,
+              ),
             ],
           ),
         ),
@@ -286,47 +182,37 @@ class _ProfileState extends State<Profile> {
 
   Widget _buildProfileField(
     String label,
-    String value,
     IconData icon,
     TextEditingController controller,
   ) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: const Color(0xFF086C74), size: 22),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-              ),
-              const SizedBox(height: 6),
-              _isEditing
-                  ? TextField(
-                    controller: controller,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                    ),
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 4),
-                      isDense: true,
-                      border: UnderlineInputBorder(),
-                    ),
-                  )
-                  : Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87,
-                    ),
-                  ),
-            ],
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey.shade600,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          readOnly: true,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+          decoration: InputDecoration(
+            prefixIcon: Icon(icon, color: const Color(0xFF086C74)),
+            filled: true,
+            fillColor: Colors.grey.shade100,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide.none,
+            ),
           ),
         ),
       ],
