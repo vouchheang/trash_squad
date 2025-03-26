@@ -20,6 +20,7 @@ class UserInitial extends UserState {}
 // State representing a loaded user.
 class UserLoaded extends UserState {
   final User user;
+  final point = 0;
 
   UserLoaded(this.user);
 }
@@ -32,4 +33,5 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       emit(UserLoaded(event.user));
     });
   }
+
 }

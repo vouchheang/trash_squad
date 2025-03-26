@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trash_squad/bloc/user_bloc.dart';
 import 'package:trash_squad/controllers/user_controller.dart';
+import 'package:trash_squad/screens/main_screen.dart';
 import 'package:trash_squad/screens/schedule.dart';
 
 class LoginWidget extends StatefulWidget {
@@ -31,7 +32,7 @@ class _LoginScreenState extends State<LoginWidget> {
     if (user != null) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => ScheduleWidget()),
+        MaterialPageRoute(builder: (context) => MainScreen()),
       );
     } else {
       ScaffoldMessenger.of(

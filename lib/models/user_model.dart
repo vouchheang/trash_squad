@@ -29,7 +29,7 @@ class User {
       'email': email,
       'profileImageUrl': profileImageUrl,
       'token': token,
-      'password': password, // Include password in JSON
+      'password': password,
     };
   }
 }

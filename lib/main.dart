@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trash_squad/bloc/schedule_bloc.dart';
+import 'package:trash_squad/bloc/activity_bloc.dart';
 import 'package:trash_squad/bloc/user_bloc.dart';
-import 'package:trash_squad/models/schedule_model.dart';
+import 'package:trash_squad/bloc/schedule_bloc.dart';
 import 'package:trash_squad/screens/splash.dart';
-import 'package:trash_squad/screens/login.dart';
+
 
 
 void main() {
@@ -18,9 +18,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<UserBloc>(
-          create: (context) => UserBloc(),
-        ),
+        BlocProvider<UserBloc>(create: (context) => UserBloc()),
+        BlocProvider<ActivityBloc>(create: (context) => ActivityBloc()),
         BlocProvider<ScheduleBloc>(
           create: (context) => ScheduleBloc(),
         ),
@@ -34,3 +33,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// -> Login
+
+// already login -> Home screen
+//         Check they have token or not
+//             Have token -> Home Screen
+//             No token -> Login Screen

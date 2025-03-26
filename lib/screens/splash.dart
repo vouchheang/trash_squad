@@ -20,18 +20,14 @@ class _SplashWedgitState extends State<SplashWedgit> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      backgroundColor:  Color(0xFF086C74),
+    return Scaffold(
+      backgroundColor: Color(0xFF086C74),
       body: Container(
         margin: EdgeInsets.only(left: 10, top: 150),
         width: double.infinity,
         child: Column(
           children: [
-            Image.asset(
-            "assets/images/splash.png",
-            height: 281,
-            width: 271,
-          ),
+            Image.asset("assets/images/splash.png", height: 281, width: 271),
             const Text(
               "Trash Squad",
               style: TextStyle(
@@ -42,7 +38,7 @@ class _SplashWedgitState extends State<SplashWedgit> {
             ),
           ],
         ),
-      ),                                                                         
-      );
+      ),
+    );
   }
 }
