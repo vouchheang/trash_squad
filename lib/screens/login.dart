@@ -177,7 +177,7 @@ class _LoginScreenState extends State<LoginWidget> {
               child: Container(
                 margin: EdgeInsets.only(left: 20, right: 20),
                 child: Text(
-                  "Signup >",
+                  "Sign up >",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,

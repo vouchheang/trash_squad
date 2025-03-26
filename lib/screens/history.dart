@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:trash_squad/controllers/delete_history.dart';
 import 'package:trash_squad/controllers/history_controller.dart';
 import 'package:trash_squad/models/history_model.dart';
 import 'package:trash_squad/screens/schedule.dart';
-import 'package:trash_squad/util/date_util.dart';
-import 'package:trash_squad/util/time_util.dart';
+import 'package:trash_squad/utils/date_util.dart';
+import 'package:trash_squad/utils/time_util.dart';
 
 class HistoryWidget extends StatefulWidget {
   @override
@@ -12,12 +13,29 @@ class HistoryWidget extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryWidget> {
   final HistoryController _historyController = HistoryController();
+  final DeleteHistoryController _deleteHistoryController = DeleteHistoryController();
   late Future<List<History>> _histories;
 
   @override
   void initState() {
     super.initState();
     _histories = _historyController.fetchHistories();
+  }
+
+  Future<void> _cancelPickup(int pickupId) async {
+    try {
+      await _deleteHistoryController.cancelPickup(pickupId);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Pickup schedule canceled successfully'),
+        backgroundColor: Color(0xFF086C74),),
+      );
+      _histories;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to cancel pickup: $e'),
+        backgroundColor: Color(0xFFFF0000),),
+      );
+    }
   }
 
   @override
@@ -45,13 +63,13 @@ class _HistoryScreenState extends State<HistoryWidget> {
                           history.datePickup.isAfter(now) ||
                           DateUtil.formatDate(history.datePickup) ==
                               DateUtil.formatDate(now),
-                    )
+                    ) 
                     .take(3)
                     .toList();
 
             List<History> pastPickups =
                 histories
-                    .where((history) => history.datePickup.isBefore(now))
+                    .where((history) => history.createdAt.isBefore(now))
                     .toList();
 
             return SingleChildScrollView(
@@ -115,8 +133,7 @@ class _HistoryScreenState extends State<HistoryWidget> {
                     SizedBox(height: 10),
                     ListView.builder(
                       shrinkWrap: true,
-                      physics:
-                          NeverScrollableScrollPhysics(),
+                      physics: NeverScrollableScrollPhysics(),
                       itemCount: pastPickups.length,
                       itemBuilder: (context, index) {
                         return pickupCard(pastPickups[index], isActive: false);
@@ -185,7 +202,7 @@ class _HistoryScreenState extends State<HistoryWidget> {
           if (isActive)
             ElevatedButton.icon(
               onPressed: () {
-                // Handle cancel logic here
+                _cancelPickup(history.pickupId);
               },
               icon: Icon(
                 Icons.restore_from_trash_outlined,
