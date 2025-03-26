@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trash_squad/bloc/schedule_bloc.dart';
 import 'package:trash_squad/bloc/user_bloc.dart';
 import 'package:trash_squad/models/schedule_model.dart';
+import 'package:trash_squad/screens/splash.dart';
 import 'package:trash_squad/screens/login.dart';
 
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home:  LoginWidget(),
+        home:  SplashWedgit(),
       ),
     );
   }
