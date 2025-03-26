@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:trash_squad/bloc/schedule_bloc.dart';
+import 'package:trash_squad/controllers/schedule_controller.dart';
 import 'package:trash_squad/screens/history.dart';
 
 class ScheduleWidget extends StatefulWidget {
   const ScheduleWidget({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _ScheduleWidgetState createState() => _ScheduleWidgetState();
 }
 
@@ -14,7 +17,99 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
-  TextEditingController timePicker = TextEditingController();
+  final TextEditingController timePicker = TextEditingController();
+  final TextEditingController _wasteTypesController = TextEditingController();
+  final TextEditingController _estimatesController = TextEditingController();
+  final ScheduleController _scheduleController = ScheduleController();
+  final TextEditingController _selectedDateController = TextEditingController();
+  final List<Map<String, String>> wasteTypes = [
+    {"name": "Plastic", "image": "assets/images/plastic.png"},
+    {"name": "Metal", "image": "assets/images/metal.png"},
+    {"name": "Paper", "image": "assets/images/paper.png"},
+    {"name": "Glass", "image": "assets/images/glass.png"},
+    {"name": "Electricity", "image": "assets/images/electricity.png"},
+  ];
+
+  Set<String> selectedWasteTypes = {};
+
+  void _toggleWasteType(String wasteType) {
+    setState(() {
+      if (selectedWasteTypes.contains(wasteType)) {
+        selectedWasteTypes.remove(wasteType);
+      } else {
+        selectedWasteTypes.add(wasteType);
+      }
+    });
+    _wasteTypesController.text = selectedWasteTypes.join(", ");
+  }
+
+  void _schedule() async {
+    final String date =
+        _selectedDateController.text.trim(); // Ensure it's trimmed
+    final String wasteTypes = _wasteTypesController.text.trim();
+    final String estimate = _estimatesController.text.trim();
+
+    if (date.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Please select a date'),
+      backgroundColor: Color(0xFFFF0000),));
+      return;
+    }
+
+    if (wasteTypes.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select at least one waste type'),
+        backgroundColor: Color(0xFFFF0000),),
+      );
+      return;
+    }
+
+    if (estimate.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter an estimated quantity'),
+        backgroundColor: Color(0xFFFF0000),),
+      );
+      return;
+    }
+    DateTime selectedDate = DateFormat('yyyy-MM-dd').parse(date);
+    String formattedDate = DateFormat(
+      'yyyy-MM-dd HH:mm:ss.SSS',
+    ).format(selectedDate);
+
+    final scheduleBloc = BlocProvider.of<ScheduleBloc>(context);
+
+    print("Date: $formattedDate");
+    print("Waste Types: $wasteTypes");
+    print("Estimate: $estimate");
+
+    final schedule = await _scheduleController.pickupSchedule(
+      formattedDate,
+      wasteTypes,
+      estimate,
+      scheduleBloc,
+    );
+
+    if (schedule != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HistoryWidget()),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Pickup schedule created successfully'),
+          backgroundColor: Color(0xFF086C74),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Pickup schedule failed'),
+          backgroundColor: Color(0xFFFF0000),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +133,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
             ),
             SizedBox(height: 15),
             Container(
-              margin: EdgeInsets.only(left: 25, right: 25),
+              margin: EdgeInsets.symmetric(horizontal: 25),
               decoration: BoxDecoration(
                 border: Border.all(color: Color(0xFF086C74), width: 2),
                 borderRadius: BorderRadius.circular(15),
@@ -57,10 +152,16 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                     _selectedDay = selectedDay;
                     _focusedDay = focusedDay;
                   });
+
+                  // Update the text controller
+                  _selectedDateController.text = DateFormat(
+                    'yyyy-MM-dd',
+                  ).format(selectedDay);
                 },
                 calendarFormat: CalendarFormat.month,
               ),
             ),
+            SizedBox(height: 20),
             SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.only(left: 25),
@@ -124,141 +225,53 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
             ),
             SizedBox(height: 15),
             Container(
-              margin: EdgeInsets.only(left: 25, right: 25),
+              margin: EdgeInsets.symmetric(horizontal: 25),
               width: double.infinity,
-              decoration: BoxDecoration(),
               height: 150,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                children: [
-                  Card(
-                    child: Container(
-                      margin: EdgeInsets.all(15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 70,
-                            width: 90,
-                            child: Image.asset("assets/images/plastic.png"),
-                          ),
-                          SizedBox(height: 10),
-                          const Text(
-                            "Plastic",
-                            style: TextStyle(
-                              color: Color(0xFF5BB59B),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
+                children:
+                    wasteTypes.map((waste) {
+                      final isSelected = selectedWasteTypes.contains(
+                        waste["name"]!,
+                      );
+                      return GestureDetector(
+                        onTap: () => _toggleWasteType(waste["name"]!),
+                        child: Card(
+                          color:
+                              isSelected ? Colors.green.shade200 : Colors.white,
+                          child: Container(
+                            margin: EdgeInsets.all(15),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 70,
+                                  width: 90,
+                                  child: Image.asset(waste["image"]!),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  waste["name"]!,
+                                  style: TextStyle(
+                                    color:
+                                        isSelected
+                                            ? Colors.green
+                                            : Color(0xFF5BB59B),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Card(
-                    child: Container(
-                      margin: EdgeInsets.all(15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 70,
-                            width: 90,
-                            child: Image.asset("assets/images/metal.png"),
-                          ),
-                          SizedBox(height: 10),
-                          const Text(
-                            "Metal",
-                            style: TextStyle(
-                              color: Color(0xFF5BB59B),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Card(
-                    child: Container(
-                      margin: EdgeInsets.all(15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 70,
-                            width: 90,
-                            child: Image.asset("assets/images/paper.png"),
-                          ),
-                          SizedBox(height: 10),
-                          const Text(
-                            "Paper",
-                            style: TextStyle(
-                              color: Color(0xFF5BB59B),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Card(
-                    child: Container(
-                      margin: EdgeInsets.all(15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 70,
-                            width: 90,
-                            child: Image.asset("assets/images/glass.png"),
-                          ),
-                          SizedBox(height: 10),
-                          const Text(
-                            "Glass",
-                            style: TextStyle(
-                              color: Color(0xFF5BB59B),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Card(
-                    child: Container(
-                      margin: EdgeInsets.all(15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 70,
-                            width: 90,
-                            child: Image.asset("assets/images/electricity.png"),
-                          ),
-                          SizedBox(height: 10),
-                          const Text(
-                            "Electricity",
-                            style: TextStyle(
-                              color: Color(0xFF5BB59B),
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                        ),
+                      );
+                    }).toList(),
               ),
             ),
+
             SizedBox(height: 15),
             Padding(
               padding: const EdgeInsets.only(left: 25),
@@ -271,18 +284,22 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                 ),
               ),
             ),
-            SizedBox(height: 15,),
+            SizedBox(height: 15),
             Container(
               margin: EdgeInsets.only(left: 25, right: 25),
               child: TextField(
+                controller: _estimatesController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.analytics_outlined, color: Color(0xFF086C74)),
+                  prefixIcon: Icon(
+                    Icons.analytics_outlined,
+                    color: Color(0xFF086C74),
+                  ),
                   filled: true,
                   fillColor: const Color.fromARGB(255, 255, 255, 255),
                   contentPadding: EdgeInsets.all(18),
-                  labelText: "Kg",
-                  labelStyle: TextStyle(
+                  hintText: "Kg",
+                  hintStyle: TextStyle(
                     color: const Color(0xFF5BB59B),
                     fontSize: 20,
                   ),
@@ -294,30 +311,36 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                     borderSide: BorderSide(color: Color(0xFF086C74), width: 2),
                   ),
                 ),
-                onTap: ()  {
-                
-                },
+                onTap: () {},
               ),
             ),
             SizedBox(height: 30),
             Container(
-              margin: EdgeInsets.only(left: 20, right: 20),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF5BB59B),
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  minimumSize: Size(465, 65),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15,
-                    ),
+              height: 200,
+              margin: EdgeInsets.only(left: 25, right: 25),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                      child: ElevatedButton(
+                        onPressed: _schedule,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF5BB59B),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          minimumSize: Size(465, 65),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        child: Text(
+                          "Schedule Pickup",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
                   ),
-                ),
-                child: Text("Schedule Pickup",
-                style: TextStyle(
-                  fontSize: 18
-                ),),
+                ],
               ),
             ),
           ],
@@ -340,9 +363,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
         child: Container(
           margin: EdgeInsets.only(left: 10),
           alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
           child: IconButton(
             icon: Icon(
               Icons.arrow_back_ios_new_outlined,
@@ -351,9 +372,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => HistoryWidget(),
-                ),
+                MaterialPageRoute(builder: (context) => HistoryWidget()),
               );
             },
           ),
@@ -365,23 +384,19 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
           child: Container(
             margin: EdgeInsets.only(right: 10),
             alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
             child: IconButton(
-            icon: Icon(
-              Icons.notifications_outlined,
-              color: Color(0xFF086C74),
+              icon: Icon(
+                Icons.notifications_outlined,
+                color: Color(0xFF086C74),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HistoryWidget()),
+                );
+              },
             ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HistoryWidget(),
-                ),
-              );
-            },
-          ),
           ),
         ),
       ],

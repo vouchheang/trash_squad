@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:trash_squad/models/activity_model.dart';
 import 'package:trash_squad/models/history_model.dart';
+import 'package:trash_squad/models/schedule_model.dart';
 import 'package:trash_squad/models/user_model.dart';
 import 'package:trash_squad/services/storage_service.dart';
 
@@ -68,5 +69,53 @@ class ApiService {
       return data.map((json) => History.fromJson(json)).toList();
     }
     return [];
+  }
+
+  Future<void> cancelPickup(int pickupId) async {
+    final token = await _storageService.getToken(); // Retrieve token
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final response = await http.delete(
+      Uri.parse('$baseUrl/api/pickup/cancel/$pickupId'),
+      headers: {'Authorization': 'Bearer $token'}, // Use token
+    );
+
+    if (response.statusCode == 200) {
+      print('Pickup successfully canceled');
+    } else {
+      throw Exception('Failed to cancel pickup: ${response.body}');
+    }
+  }
+
+  Future<Schedule?> schedulePickup(
+    String date,
+    String wasteTypes,
+    String estimateWeight,
+  ) async {
+    final token = await _storageService.getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/pickup/schedule'),
+      body: jsonEncode({
+        'date': date,
+        'wasteTypes': [wasteTypes],
+        'estimateWeight': estimateWeight,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final schedule = Schedule.fromJson(jsonDecode(response.body));
+      print('Pickup schedule created successfully');
+      if (schedule.token != null) {
+        await _storageService.saveToken(schedule.token!);
+      }
+      return schedule;
+    }
+    return null;
   }
 }
