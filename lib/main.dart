@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trash_squad/bloc/activity_bloc.dart';
 import 'package:trash_squad/bloc/user_bloc.dart';
-import 'package:trash_squad/screens/history.dart';
-import 'package:trash_squad/screens/home.dart';
-import 'package:trash_squad/screens/login.dart';
-import 'package:trash_squad/screens/main_screen.dart';
+import 'package:trash_squad/bloc/schedule_bloc.dart';
+import 'package:trash_squad/screens/splash.dart';
+
+
 
 void main() {
   runApp(const MyApp());
@@ -20,12 +20,14 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<UserBloc>(create: (context) => UserBloc()),
         BlocProvider<ActivityBloc>(create: (context) => ActivityBloc()),
-
+        BlocProvider<ScheduleBloc>(
+          create: (context) => ScheduleBloc(),
+        ),
         // Add other BLoCs here
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: LoginWidget(),
+        home:  SplashWedgit(),
       ),
     );
   }

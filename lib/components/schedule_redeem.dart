@@ -20,7 +20,7 @@ class ScheduleandRedeem extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const HistoryWidget()),
+                    MaterialPageRoute(builder: (context) =>  HistoryWidget()),
                   );
                   },
                   child: Container(

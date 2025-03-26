@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:trash_squad/screens/login.dart';
 
-class FlashWidget extends StatelessWidget {
-  const FlashWidget({super.key});
+class SplashWedgit extends StatefulWidget {
+  @override
+  _SplashWedgitState createState() => _SplashWedgitState();
+}
+
+class _SplashWedgitState extends State<SplashWedgit> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 1), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginWidget()), // Navigate to login
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
