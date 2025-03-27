@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trash_squad/controllers/profile_controller.dart';
 import 'package:trash_squad/models/user_model.dart';
+import 'package:trash_squad/screens/login.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -52,6 +53,13 @@ class _ProfileState extends State<Profile> {
     super.dispose();
   }
 
+  // Logout method
+  void _logout() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const LoginWidget()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +85,7 @@ class _ProfileState extends State<Profile> {
             child: Column(
               children: [
                 _buildProfileHeader(user),
-                const SizedBox(height: 24),
+                const SizedBox(height: 40),
                 _buildProfileDetailsCard(user),
                 const SizedBox(height: 24),
               ],
@@ -88,7 +96,62 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget _buildProfileHeader(User user) {
+  Widget _buildProfileDetailsCard(User user) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Card(
+        elevation: 6,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildProfileField(
+                'Full Name',
+                Icons.person,
+                _firstNameController,
+              ),
+              const SizedBox(height: 16),
+              _buildProfileField('Email', Icons.email, _emailController),
+              const SizedBox(height: 16),
+              _buildProfileField('Phone Number', Icons.phone, _phoneController),
+              const SizedBox(height: 16),
+              _buildProfileField(
+                'Address',
+                Icons.location_on,
+                _addressController,
+              ),
+              const SizedBox(height: 16),
+              // New Logout Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _logout,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text(
+                    'Logout',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+   Widget _buildProfileHeader(User user) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24),
       decoration: BoxDecoration(
@@ -147,38 +210,6 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget _buildProfileDetailsCard(User user) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Card(
-        elevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildProfileField(
-                'Full Name',
-                Icons.person,
-                _firstNameController,
-              ),
-              const SizedBox(height: 16),
-              _buildProfileField('Email', Icons.email, _emailController),
-              const SizedBox(height: 16),
-              _buildProfileField('Phone Number', Icons.phone, _phoneController),
-              const SizedBox(height: 16),
-              _buildProfileField(
-                'Address',
-                Icons.location_on,
-                _addressController,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildProfileField(
     String label,

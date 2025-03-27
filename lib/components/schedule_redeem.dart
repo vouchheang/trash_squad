@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:trash_squad/screens/history.dart';
 import 'package:trash_squad/screens/reward.dart';
+import 'package:trash_squad/screens/schedule.dart';
 
 class ScheduleandRedeem extends StatelessWidget {
   const ScheduleandRedeem({super.key});
@@ -20,7 +20,7 @@ class ScheduleandRedeem extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) =>  HistoryWidget()),
+                    MaterialPageRoute(builder: (context) =>  ScheduleWidget()),
                   );
                   },
                   child: Container(

@@ -23,7 +23,7 @@ class _AllActivitiesState extends State<AllActivities> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8), // Softer background color
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Softer background color
       body: SafeArea(
         child: Column(
           children: [
