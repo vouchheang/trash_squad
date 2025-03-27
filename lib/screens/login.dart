@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trash_squad/bloc/user_bloc.dart';
 import 'package:trash_squad/controllers/user_controller.dart';
 import 'package:trash_squad/screens/main_screen.dart';
-import 'package:trash_squad/screens/schedule.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key});

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:trash_squad/controllers/delete_history.dart';
 import 'package:trash_squad/controllers/history_controller.dart';
 import 'package:trash_squad/models/history_model.dart';
-import 'package:trash_squad/screens/schedule.dart';
 import 'package:trash_squad/utils/date_util.dart';
 import 'package:trash_squad/utils/time_util.dart';
 
@@ -249,25 +248,5 @@ AppBar appBar(BuildContext context) {
       fontSize: 25,
     ),
     centerTitle: true,
-    leading: GestureDetector(
-      onTap: () {},
-      child: Container(
-        margin: EdgeInsets.only(left: 10),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-        child: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_outlined,
-            color: Color(0xFF086C74),
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ScheduleWidget()),
-            );
-          },
-        ),
-      ),
-    ),
   );
 }

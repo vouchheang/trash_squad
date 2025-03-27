@@ -5,6 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:trash_squad/bloc/schedule_bloc.dart';
 import 'package:trash_squad/controllers/schedule_controller.dart';
 import 'package:trash_squad/screens/history.dart';
+import 'package:trash_squad/screens/main_screen.dart';
 
 class ScheduleWidget extends StatefulWidget {
   const ScheduleWidget({super.key});
@@ -44,31 +45,36 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
   }
 
   void _schedule() async {
-    final String date =
-        _selectedDateController.text.trim(); // Ensure it's trimmed
+    final String date = _selectedDateController.text.trim();
     final String wasteTypes = _wasteTypesController.text.trim();
     final String estimate = _estimatesController.text.trim();
 
     if (date.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Please select a date'),
-      backgroundColor: Color(0xFFFF0000),));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please select a date'),
+          backgroundColor: Color(0xFFFF0000),
+        ),
+      );
       return;
     }
 
     if (wasteTypes.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select at least one waste type'),
-        backgroundColor: Color(0xFFFF0000),),
+        SnackBar(
+          content: Text('Please select at least one waste type'),
+          backgroundColor: Color(0xFFFF0000),
+        ),
       );
       return;
     }
 
     if (estimate.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter an estimated quantity'),
-        backgroundColor: Color(0xFFFF0000),),
+        SnackBar(
+          content: Text('Please enter an estimated quantity'),
+          backgroundColor: Color(0xFFFF0000),
+        ),
       );
       return;
     }
@@ -159,6 +165,33 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                   ).format(selectedDay);
                 },
                 calendarFormat: CalendarFormat.month,
+                headerStyle: HeaderStyle(
+                  titleTextStyle: TextStyle(
+                    color: Color(0xFF086C74),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  formatButtonVisible: false,
+                ),
+
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekdayStyle: TextStyle(color: Colors.teal),
+                  weekendStyle: TextStyle(color: Colors.teal),
+                ),
+                calendarStyle: CalendarStyle(
+                  defaultTextStyle: TextStyle(
+                    color: Color(0xFF086C74),
+                  ),
+                  weekendTextStyle: TextStyle(
+                    color: Color(0xFF086C74),
+                  ),
+                  selectedTextStyle: TextStyle(
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                  ),
+                  todayTextStyle: TextStyle(
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 20),
@@ -323,22 +356,25 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
-                      child: ElevatedButton(
-                        onPressed: _schedule,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF5BB59B),
-                          foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                          minimumSize: Size(465, 65),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
+                    child: ElevatedButton(
+                      onPressed: _schedule,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF5BB59B),
+                        foregroundColor: Colors.white,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
                         ),
-                        child: Text(
-                          "Schedule Pickup",
-                          style: TextStyle(fontSize: 18),
+                        minimumSize: Size(465, 65),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
                         ),
                       ),
+                      child: Text(
+                        "Schedule Pickup",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -372,34 +408,12 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HistoryWidget()),
+                MaterialPageRoute(builder: (context) => MainScreen()),
               );
             },
           ),
         ),
       ),
-      actions: [
-        GestureDetector(
-          onTap: () {},
-          child: Container(
-            margin: EdgeInsets.only(right: 10),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: IconButton(
-              icon: Icon(
-                Icons.notifications_outlined,
-                color: Color(0xFF086C74),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HistoryWidget()),
-                );
-              },
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
