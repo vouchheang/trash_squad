@@ -325,7 +325,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   prefixIcon: Icon(
-                    Icons.analytics_outlined,
+                    Icons.scale_outlined,
                     color: Color(0xFF086C74),
                   ),
                   filled: true,

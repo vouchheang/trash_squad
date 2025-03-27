@@ -13,6 +13,11 @@ class UserController {
     return user;
   }
 
+  
+}
+
+class RegisterController {
+  final ApiService _apiService = ApiService();
   Future<bool> register(String email, String profileImageUrl, String username, String password) async {
     final user = User(
       email: email,

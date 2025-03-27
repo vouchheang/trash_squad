@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trash_squad/bloc/user_bloc.dart';
 import 'package:trash_squad/controllers/user_controller.dart';
 import 'package:trash_squad/screens/main_screen.dart';
+import 'package:trash_squad/screens/register.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key});
@@ -36,7 +37,8 @@ class _LoginScreenState extends State<LoginWidget> {
     } else {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Login failed')));
+      ).showSnackBar(SnackBar(content: Text('Login failed'),
+      backgroundColor: Colors.red,));
     }
   }
 
@@ -170,7 +172,7 @@ class _LoginScreenState extends State<LoginWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginWidget(),
+                    builder: (context) => Register(),
                   ),
                 );
               },
